@@ -1,113 +1,70 @@
-#coding=utf-8
+from bs4 import BeautifulSoup
 
-from tkinter import * #GUI(图像用户界面)模块
 
-from ScrolledText import ScrolledText #文本滚动条
+html_doc = """
+<html><head><title>The Dormouse's story</title></head>
+<body>
+<p class="title"><b>The Dormouse's story</b></p>
 
-import urllib,requests #请求模块
+<p class="story">Once upon a time there were three little sisters; and their names were
+<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>,
+<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and
+<a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>;
+and they lived at the bottom of a well.</p>
 
-import re #正则表达式
+<p class="story">...</p>
+"""
 
-import threading #多线程处理与控制
+# 根据HTML网页字符串创建beautifulSoup对象
+soup = BeautifulSoup(
+    html_doc,                   # Html文档字符串
+    'html.parser'              # Html解析器
+#    from_encoding='utf-8'       # Html文档的编码
+)
 
-url_name = []#url+name
+links = soup.find_all('a')
 
-a = 1#页码
+#for link in links:
+#    print(link.name, link['href'], link.get_text())
 
-def get():
+link_node = soup.find('a', href='http://example.com/tillie')
+#print(link_node)
 
-global a #全局变量
+#print(soup.prettify())
 
-hd = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'}
+print(soup.title)
+print(soup.head)
+print(soup.find_all('a'))
 
-url = '视频短剧_搞笑视频_恶搞视频－百思不得姐官网，第1页'+str(a)
+print(type(soup.a))
+print(soup.name)
+print(soup.head.name)
+print(soup.a['href'])
 
-varl.set('已结获取到第%s页视频'%(a))
+soup.p['class']='newClass'
+print(soup.p)
+del soup.p['class']
+print(soup.p)
 
-html = requests.get(url,headers=hd).text #获取源码
+print(type(soup.p.string))
 
-a += 1
+print(type(soup.name))
 
-url_content = re.compile(r'<div class="j-r-list-c">.*?</div>.*?</div>',re.S)
+print(soup.a)
+print(soup.a.string)
+print(type(soup.a.string))
 
-url_contents = re.findall(url_content,html)
 
-#print url_contents
+print("======================")
+print(soup.head.children)
+for child in soup.body.children:
+    print(child)
 
-for i in url_contents:
+print("=======================")
+for child in soup.descendants:
+    print(child)
 
-url_reg = r'data-mp4="(.*?)">'#匹配地址
 
-url_items = re.findall(url_reg,i)
 
-#print url_items #视频列表
 
-if url_items:#判断地址列表是否存在
 
-name_reg = re.compile(r'<a href="/detail-.{8}?.html"(.*?)</\w>',re.S)
-
-name_items = re.findall(name_reg,i)
-
-#print name_items #名字列表
-
-for i,k in zip(name_items,url_items):
-
-url_name.append([i,k])
-
-print i,k
-
-return url_name
-
-id = 1#视频
-
-def write():
-
-global id
-
-while id<10:
-
-url_name = get()
-
-for i in url_name:#名字+地址
-
-#aa = i[0].decode('utf-8').encode('gbk')
-
-urllib.urlretrieve(i[1],'video\\%s.mp4'%(a))
-
-text.insert(END,str(id)+'.'+i[1]+'\n'+i[0]+'\n')
-
-url_name.pop(0)
-
-id += 1
-
-varl.set('视频链接和名字抓取完毕,over')
-
-def start():
-
-th = threading.Thread(target=write)
-
-th.start()#触发
-
-root = Tk()
-
-root.title('爬取某视频')
-
-root.geometry('666x525')
-
-text = ScrolledText(root,font=('微软雅黑',10))
-
-text.grid() #布局的方法 pack简单
-
-button = Button(root,text='开始爬取',font=('微软雅黑',10),command=start)
-
-button.grid()
-
-varl = StringVar()
-
-label = Label(root,font=('微软雅黑',10),fg='red',textvariable = varl)
-
-label.grid()
-
-varl.set('已准备...')
-
-root.mainloop()#发送创建窗口的指令

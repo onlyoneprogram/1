@@ -3,7 +3,7 @@ import urllib.request
 import requests
 
 # 请求地址
-hburl = 'http://huaban.com/favorite/beauty/'
+hburl = 'http://huaban.com/explore/guzhuangmeinv/'
 # 请求头，根据需要添加相应的元素
 heads = {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
@@ -65,7 +65,7 @@ def download(arr):
         # 拼接图片名字，包括格式
         file_name = imgurl.split('/')[-1].replace('20%', '') + '.jpg'
         # open函数会打开指定路径，存在该文件则打开，不存在则创建后再打开
-        file = open("/home/wangxy/Desktop/huaban" + '/' + file_name, 'wb')
+        file = open("/home/wangxy/Desktop/古装美女" + '/' + file_name, 'wb')
         # 将图片信息写入到本地
         file.write(img)
         # 关闭资源
