@@ -3,7 +3,7 @@ import requests
 from lxml import etree
 import urllib.request
 
-url = 'http://1122ur.com/tupianqu/katong/index_'
+url = 'http://1122hi.com/tupianqu/yazhou/index_'
 
 headers = {
     'User-Agent':
@@ -52,7 +52,7 @@ def getimg(detailUrl):
 if __name__ == "__main__":
     for j in range(15):
         list = []
-        x = j + 3
+        x = j + 2
         newurl = url + str(x) + '.html'
         print(newurl)
         list = geturls(newurl)
